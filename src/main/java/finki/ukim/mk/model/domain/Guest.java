@@ -6,10 +6,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
-public class Host {
-
+@Entity
+public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,17 +19,18 @@ public class Host {
     @ManyToOne
     private Country country;
 
-    @ManyToMany
-    @JoinTable(
-            name="hosts_guests",
-            joinColumns = @JoinColumn(name="host_id"),
-            inverseJoinColumns = @JoinColumn(name="guest_id")
-    )
-    private List<Guest> guestList;
+    @ManyToMany(mappedBy = "guestList")
+    private List<Host> hostList;
 
+    public Guest() {
+    }
 
-    public Host() {
-    this.guestList=new ArrayList<>();
+    public List<Host> getHostList() {
+        return hostList;
+    }
+
+    public void setHostList(List<Host> hostList) {
+        this.hostList = hostList;
     }
 
     public Long getId() {
@@ -49,21 +49,6 @@ public class Host {
         this.name = name;
     }
 
-    public Host(String name, String surname, Country country) {
-        this.name = name;
-        this.surname = surname;
-        this.country = country;
-        this.guestList=new ArrayList<>();
-    }
-
-    public List<Guest> getGuestList() {
-        return guestList;
-    }
-
-    public void setGuestList(List<Guest> guestList) {
-        this.guestList = guestList;
-    }
-
     public String getSurname() {
         return surname;
     }
@@ -80,19 +65,25 @@ public class Host {
         this.country = country;
     }
 
-    public Host(Long id, String name, String surname, Country country,List<Guest> guestList) {
+    public Guest(String name, String surname, Country country) {
+        this.name = name;
+        this.surname = surname;
+        this.country = country;
+        this.hostList=new ArrayList<>();
+    }
+
+    public Guest(Long id, String name, String surname, Country country) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.country=country;
+        this.hostList=new ArrayList<>();
+    }
+    public Guest(Long id, String name, String surname, Country country, List<Host> hostList) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.country = country;
-        this.guestList=guestList;
+        this.hostList = hostList;
     }
-    public Host( String name, String surname, Country country,List<Guest> guestList) {
-        this.name = name;
-        this.surname = surname;
-        this.country = country;
-        this.guestList=guestList;
-    }
-
-
 }

@@ -1,6 +1,7 @@
 package finki.ukim.mk.web;
 
 import finki.ukim.mk.dto.CreateHostDto;
+import finki.ukim.mk.dto.DisplayGuestDto;
 import finki.ukim.mk.dto.DisplayHostDto;
 import finki.ukim.mk.service.application.HostApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,17 @@ public class HostController {
         return hostApplicationService.findById(id)
                 .map(host -> ResponseEntity.ok().body(host))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Add a new guest", description = "Add guest.")
+    @PostMapping("/{id}/addGuest")
+    public ResponseEntity<DisplayHostDto> save(@PathVariable Long id,@RequestParam Long guestId) {
+        if (hostApplicationService.findById(id).isPresent()) {
+            hostApplicationService.reservation(id,guestId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(summary = "Add a new host", description = "Creates a new host.")

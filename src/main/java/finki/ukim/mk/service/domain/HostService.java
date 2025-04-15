@@ -13,4 +13,5 @@ public interface HostService {
     Optional<Host> save(Host host);
 
     void deleteById(Long id);
+    void reservation(Long id,Long guestId);
 }

@@ -2,6 +2,7 @@ package finki.ukim.mk.service.application.impl;
 
 import finki.ukim.mk.dto.CreateHostDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
+import finki.ukim.mk.dto.DisplayGuestDto;
 import finki.ukim.mk.dto.DisplayHostDto;
 import finki.ukim.mk.model.domain.Country;
 import finki.ukim.mk.model.domain.Host;
@@ -26,6 +27,11 @@ public class HostApplicationServiceImpl implements HostApplicationService {
     @Override
     public List<DisplayHostDto> findAll() {
         return hostService.findAll().stream().map(DisplayHostDto::from).toList();
+    }
+
+    @Override
+    public void reservation(Long id, Long guestId) {
+        this.hostService.reservation(id, guestId);
     }
 
     @Override
