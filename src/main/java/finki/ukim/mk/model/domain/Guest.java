@@ -21,8 +21,17 @@ public class Guest {
 
     @ManyToMany(mappedBy = "guestList")
     private List<Host> hostList;
-
+    @ManyToMany
+    private List<Accommodation> wishList;
     public Guest() {
+    }
+
+    public List<Accommodation> getWishList() {
+        return wishList;
+    }
+
+    public void setWishList(List<Accommodation> wishList) {
+        this.wishList = wishList;
     }
 
     public List<Host> getHostList() {
@@ -70,6 +79,7 @@ public class Guest {
         this.surname = surname;
         this.country = country;
         this.hostList=new ArrayList<>();
+        this.wishList=new ArrayList<>();
     }
 
     public Guest(Long id, String name, String surname, Country country) {
@@ -78,6 +88,7 @@ public class Guest {
         this.surname = surname;
         this.country=country;
         this.hostList=new ArrayList<>();
+        this.wishList=new ArrayList<>();
     }
     public Guest(Long id, String name, String surname, Country country, List<Host> hostList) {
         this.id = id;
@@ -85,5 +96,6 @@ public class Guest {
         this.surname = surname;
         this.country = country;
         this.hostList = hostList;
+        this.wishList=new ArrayList<>();
     }
 }

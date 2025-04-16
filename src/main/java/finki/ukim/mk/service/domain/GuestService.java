@@ -14,4 +14,7 @@ public interface GuestService {
 
     Optional<Guest> save(Guest guest);
     void deleteById(Long id);
+
+    String addToWishList(Long id,Long AccId);
+    String reserveWishList(Long id);
 }

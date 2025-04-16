@@ -18,4 +18,6 @@ public interface GuestApplicationService {
     Optional<DisplayGuestDto> update(Long id, CreateGuestDto host);
 
     void deleteById(Long id);
+    String addToWishList(Long id,Long AccId);
+    String reserveWishList(Long id);
 }

@@ -61,4 +61,25 @@ public class GuestController {
             return ResponseEntity.notFound().build();
         }
     }
+    @Operation(summary = "Add to wishlist an accommodation by a specific guest", description = "Adds accommodation to wishlist.")
+    @PostMapping("/addWishlist")
+    public ResponseEntity<String> rent(@RequestParam Long guest,@RequestParam Long accommodation) {
+        if (guestApplicationService.findById(guest).isPresent()) {
+            String data=guestApplicationService.addToWishList(guest,accommodation);
+            return ResponseEntity.ok().body(data);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Add to wishlist an accommodation by a specific guest", description = "Adds accommodation to wishlist.")
+    @PostMapping("/reserveWishList")
+    public ResponseEntity<String> reserveWish(@RequestParam Long guest) {
+        if (guestApplicationService.findById(guest).isPresent()) {
+            String data=guestApplicationService.reserveWishList(guest);
+            return ResponseEntity.ok().body(data);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

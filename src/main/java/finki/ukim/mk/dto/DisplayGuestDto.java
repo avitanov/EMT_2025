@@ -13,14 +13,16 @@ public record DisplayGuestDto(
         Long id,
         String name,
         String surname,
-        DisplayCountryDto country
+        DisplayCountryDto country,
+        List<DisplayAccommodationDto> accommodationList
 ) {
     public static DisplayGuestDto from(Guest guest) {
         return new DisplayGuestDto(
                 guest.getId(),
                 guest.getName(),
                 guest.getSurname(),
-                DisplayCountryDto.from(guest.getCountry())
+                DisplayCountryDto.from(guest.getCountry()),
+                DisplayAccommodationDto.from(guest.getWishList())
         );
     }
 

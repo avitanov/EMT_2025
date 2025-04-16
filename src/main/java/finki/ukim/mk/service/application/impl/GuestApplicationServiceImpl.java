@@ -59,6 +59,16 @@ public class GuestApplicationServiceImpl implements GuestApplicationService {
     }
 
     @Override
+    public String addToWishList(Long id, Long AccId) {
+        return this.guestService.addToWishList(id,AccId);
+    }
+
+    @Override
+    public String reserveWishList(Long id) {
+        return this.guestService.reserveWishList(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         this.guestService.deleteById(id);
     }
