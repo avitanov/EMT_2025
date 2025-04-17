@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.domain;
 
+import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.model.domain.Accommodation;
 import finki.ukim.mk.repository.AccommodationRepository;
 
@@ -18,6 +19,8 @@ public interface AccommodationService {
     void deleteById(Long id);
 
     void rentAccommodation(Long id);
+
+    List<AccommodationPerCategoryDTO> statistics();
 
 
 

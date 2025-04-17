@@ -48,7 +48,7 @@ public class GuestServiceImpl implements GuestService {
         }
         for(Accommodation acc:guest.getWishList()) {
             acc.setIsReserved(true);
-            accommodationService.save(acc);
+            accommodationService.update(acc.getId(),acc);
         }
         return "Successfully Added";
     }

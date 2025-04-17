@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.domain.impl;
 
+import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.model.domain.Accommodation;
 import finki.ukim.mk.model.domain.Host;
 import finki.ukim.mk.model.enumerations.Category;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationServiceImpl implements AccommodationService {
@@ -86,5 +88,10 @@ public class AccommodationServiceImpl implements AccommodationService {
         Accommodation tmp=this.accommodationRepository.findById(id).get();
         tmp.setIsReserved(Boolean.TRUE);
         this.accommodationRepository.save(tmp);
+    }
+
+    @Override
+    public List<AccommodationPerCategoryDTO> statistics() {
+        return this.accommodationRepository.countReservedByCategory().stream().map((obj)->new AccommodationPerCategoryDTO(String.valueOf(obj[0]),((Number) obj[1]).intValue())).collect(Collectors.toList());
     }
 }

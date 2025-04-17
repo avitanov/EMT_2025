@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.application;
 
+import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
 
@@ -21,4 +22,5 @@ public interface AccommodationApplicationService {
     void deleteById(Long id);
     void rentAccommodation(Long id);
 
+    List<AccommodationPerCategoryDTO> statistics();
 }

@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.application.impl;
 
+import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
 import finki.ukim.mk.model.domain.Host;
@@ -72,5 +73,10 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     @Override
     public void rentAccommodation(Long id) {
         accommodationService.rentAccommodation(id);
+    }
+
+    @Override
+    public List<AccommodationPerCategoryDTO> statistics() {
+        return this.accommodationService.statistics();
     }
 }
