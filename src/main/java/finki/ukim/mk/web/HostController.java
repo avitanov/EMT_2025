@@ -3,6 +3,8 @@ package finki.ukim.mk.web;
 import finki.ukim.mk.dto.CreateHostDto;
 import finki.ukim.mk.dto.DisplayGuestDto;
 import finki.ukim.mk.dto.DisplayHostDto;
+import finki.ukim.mk.model.domain.views.HostsPerCountryView;
+import finki.ukim.mk.model.projections.HostProjection;
 import finki.ukim.mk.service.application.HostApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +35,17 @@ public class HostController {
         return hostApplicationService.findById(id)
                 .map(host -> ResponseEntity.ok().body(host))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Get num hosts per country", description = "Get num hosts per country")
+    @GetMapping("/by-country")
+    public List<HostsPerCountryView> findNumHostsPerCountry() {
+        return hostApplicationService.findNumHostsPerCountry();
+    }
+    @Operation(summary = "Get projection", description = "Get projection for host name and surname")
+    @GetMapping("/names")
+    public List<HostProjection> findAllProjections() {
+        return hostApplicationService.findAllProjections();
     }
 
     @Operation(summary = "Add a new guest", description = "Add guest.")

@@ -35,8 +35,6 @@ public class DataInitializer {
         this.hostRepository=hostRepository;
     }
 
-
-    @PostConstruct
     public void init() {
         countryRepository.save(new Country("Macedonia","Europe"));
         countryRepository.save(new Country("Japan","Asia"));

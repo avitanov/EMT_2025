@@ -3,6 +3,7 @@ package finki.ukim.mk.web;
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
+import finki.ukim.mk.model.domain.views.AccommodationsPerHostView;
 import finki.ukim.mk.service.application.AccommodationApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,6 +58,12 @@ public class AccommodationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get num accommodations per host", description = "Retrieves a list of num accommodations by hosts.")
+    @GetMapping("/by-host")
+    public List<AccommodationsPerHostView> findNumAccommodationsByHost(
+    ) {
+        return accommodationApplicationService.findAllAccommodationsByHost();
+    }
 
     @Operation(summary = "Update an accommodation", description = "Updates an existing accommodation by ID.")
     @PutMapping("/edit/{id}")

@@ -6,6 +6,8 @@ import finki.ukim.mk.dto.DisplayGuestDto;
 import finki.ukim.mk.dto.DisplayHostDto;
 import finki.ukim.mk.model.domain.Country;
 import finki.ukim.mk.model.domain.Host;
+import finki.ukim.mk.model.domain.views.HostsPerCountryView;
+import finki.ukim.mk.model.projections.HostProjection;
 import finki.ukim.mk.service.application.HostApplicationService;
 import finki.ukim.mk.service.domain.CountryService;
 import finki.ukim.mk.service.domain.HostService;
@@ -24,6 +26,7 @@ public class HostApplicationServiceImpl implements HostApplicationService {
         this.countryService = countryService;
     }
 
+
     @Override
     public List<DisplayHostDto> findAll() {
         return hostService.findAll().stream().map(DisplayHostDto::from).toList();
@@ -32,6 +35,16 @@ public class HostApplicationServiceImpl implements HostApplicationService {
     @Override
     public void reservation(Long id, Long guestId) {
         this.hostService.reservation(id, guestId);
+    }
+
+    @Override
+    public List<HostsPerCountryView> findNumHostsPerCountry() {
+        return hostService.findNumHostsPerCountry();
+    }
+
+    @Override
+    public List<HostProjection> findAllProjections() {
+        return hostService.findAllProjections();
     }
 
     @Override

@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import finki.ukim.mk.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 username));
     }
+
+
 
     @Override
     public User register(
@@ -60,8 +64,11 @@ public class UserServiceImpl implements UserService {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return userRepository.findByUsernameAndPassword(username, password).orElseThrow(
-                InvalidUserCredentialsException::new);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(InvalidArgumentsException::new);
+        if (!passwordEncoder.matches(password, user.getPassword()))
+            throw new InvalidUserCredentialsException();
+        return user;
     }
 }
 

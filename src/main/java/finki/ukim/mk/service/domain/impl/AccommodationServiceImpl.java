@@ -2,18 +2,14 @@ package finki.ukim.mk.service.domain.impl;
 
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.model.domain.Accommodation;
-import finki.ukim.mk.model.domain.Host;
-import finki.ukim.mk.model.enumerations.Category;
+import finki.ukim.mk.model.domain.views.AccommodationsPerHostView;
 import finki.ukim.mk.repository.AccommodationRepository;
-import finki.ukim.mk.repository.CountryRepository;
-import finki.ukim.mk.repository.HostRepository;
+import finki.ukim.mk.repository.AccommodationsPerHostViewRepository;
 import finki.ukim.mk.service.domain.AccommodationService;
 
-import finki.ukim.mk.service.domain.CountryService;
 import finki.ukim.mk.service.domain.HostService;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,10 +19,14 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
     private final HostService hostService;
+    private final AccommodationsPerHostViewRepository accommodationsPerHostViewRepository;
 
-    public AccommodationServiceImpl(AccommodationRepository accommodationRepository, HostService hostService) {
+
+
+    public AccommodationServiceImpl(AccommodationRepository accommodationRepository, HostService hostService, AccommodationsPerHostViewRepository accommodationsPerHostViewRepository) {
         this.accommodationRepository = accommodationRepository;
         this.hostService = hostService;
+        this.accommodationsPerHostViewRepository = accommodationsPerHostViewRepository;
     }
 
     @Override
@@ -93,5 +93,10 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     public List<AccommodationPerCategoryDTO> statistics() {
         return this.accommodationRepository.countReservedByCategory().stream().map((obj)->new AccommodationPerCategoryDTO(String.valueOf(obj[0]),((Number) obj[1]).intValue())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AccommodationsPerHostView> findAllAccommodationsByHost() {
+        return accommodationsPerHostViewRepository.findAll();
     }
 }

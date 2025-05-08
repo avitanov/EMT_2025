@@ -55,7 +55,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public List<Guest> findAll() {
-        return guestRepository.findAll();
+        return guestRepository.loadALl();
     }
 
     @Override

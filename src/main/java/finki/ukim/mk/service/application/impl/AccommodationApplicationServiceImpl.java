@@ -4,6 +4,7 @@ import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
 import finki.ukim.mk.model.domain.Host;
+import finki.ukim.mk.model.domain.views.AccommodationsPerHostView;
 import finki.ukim.mk.service.application.AccommodationApplicationService;
 import finki.ukim.mk.service.domain.AccommodationService;
 import finki.ukim.mk.service.domain.HostService;
@@ -20,6 +21,11 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     public AccommodationApplicationServiceImpl(AccommodationService accommodationService, HostService hostService) {
         this.accommodationService = accommodationService;
         this.hostService = hostService;
+    }
+
+    @Override
+    public List<AccommodationsPerHostView> findAllAccommodationsByHost() {
+        return accommodationService.findAllAccommodationsByHost();
     }
 
     @Override

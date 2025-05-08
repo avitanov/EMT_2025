@@ -2,6 +2,7 @@ package finki.ukim.mk.service.domain;
 
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.model.domain.Accommodation;
+import finki.ukim.mk.model.domain.views.AccommodationsPerHostView;
 import finki.ukim.mk.repository.AccommodationRepository;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface AccommodationService {
     void rentAccommodation(Long id);
 
     List<AccommodationPerCategoryDTO> statistics();
+    List<AccommodationsPerHostView> findAllAccommodationsByHost();
+
 
 
 

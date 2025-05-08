@@ -2,8 +2,10 @@ package finki.ukim.mk.service.application.impl;
 
 import finki.ukim.mk.dto.CreateUserDto;
 import finki.ukim.mk.dto.DisplayUserDto;
+import finki.ukim.mk.dto.LoginResponseDTO;
 import finki.ukim.mk.dto.LoginUserDto;
 import finki.ukim.mk.model.domain.User;
+import finki.ukim.mk.security.JwtHelper;
 import finki.ukim.mk.service.application.UserApplicationService;
 import finki.ukim.mk.service.domain.UserService;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class UserApplicationServiceImpl implements UserApplicationService {
 
     private final UserService userService;
+    private final JwtHelper jwtHelper;
 
-    public UserApplicationServiceImpl(UserService userService) {
+    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper) {
         this.userService = userService;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -33,11 +37,16 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public Optional<DisplayUserDto> login(LoginUserDto loginUserDto) {
-        return Optional.of(DisplayUserDto.from(userService.login(
+    public Optional<LoginResponseDTO> login(LoginUserDto loginUserDto) {
+        User user = userService.login(
                 loginUserDto.username(),
                 loginUserDto.password()
-        )));
+        );
+
+        String token = jwtHelper.generateToken(user);
+
+        return Optional.of(new LoginResponseDTO(token));
+
     }
 
     @Override
