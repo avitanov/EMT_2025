@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.application.impl;
 
+import finki.ukim.mk.dto.AccommodationDetailsDTO;
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
@@ -57,6 +58,11 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     @Override
     public Optional<DisplayAccommodationDto> findById(Long id) {
         return accommodationService.findById(id).map(DisplayAccommodationDto::from);
+    }
+
+    @Override
+    public Optional<AccommodationDetailsDTO> findByIdDetails(Long id) {
+        return accommodationService.findByIdDetails(id).map(AccommodationDetailsDTO::from);
     }
 
     @Override

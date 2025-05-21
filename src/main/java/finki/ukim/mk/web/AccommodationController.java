@@ -1,5 +1,6 @@
 package finki.ukim.mk.web;
 
+import finki.ukim.mk.dto.AccommodationDetailsDTO;
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
@@ -43,6 +44,15 @@ public class AccommodationController {
                 .map(acc -> ResponseEntity.ok().body(acc))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @Operation(summary = "Get accommodation by ID", description = "Finds an accommodation by its ID.")
+    @GetMapping("/{id}/details")
+    public ResponseEntity<AccommodationDetailsDTO> findByIdDetails(@PathVariable Long id) {
+        return accommodationApplicationService.findByIdDetails(id)
+                .map(acc -> ResponseEntity.ok().body(acc))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 
     @Operation(summary = "Get accommodation statistics", description = "Reserved Accommodation Statistics per every category")
     @GetMapping("/statistics")

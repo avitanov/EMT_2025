@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.domain.impl;
 
+import finki.ukim.mk.dto.AccommodationDetailsDTO;
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.model.domain.Accommodation;
 import finki.ukim.mk.model.domain.views.AccommodationsPerHostView;
@@ -43,6 +44,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     public Optional<Accommodation> findById(Long id) {
 
+        return accommodationRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Accommodation> findByIdDetails(Long id) {
         return accommodationRepository.findById(id);
     }
 

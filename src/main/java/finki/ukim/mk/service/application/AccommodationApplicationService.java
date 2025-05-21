@@ -1,5 +1,6 @@
 package finki.ukim.mk.service.application;
 
+import finki.ukim.mk.dto.AccommodationDetailsDTO;
 import finki.ukim.mk.dto.AccommodationPerCategoryDTO;
 import finki.ukim.mk.dto.CreateAccommodationDto;
 import finki.ukim.mk.dto.DisplayAccommodationDto;
@@ -15,6 +16,7 @@ public interface AccommodationApplicationService {
     Optional<DisplayAccommodationDto> save(CreateAccommodationDto accommodationDto);
 
     Optional<DisplayAccommodationDto> findById(Long id);
+    Optional<AccommodationDetailsDTO> findByIdDetails(Long id);
 
     List<DisplayAccommodationDto> findAll();
 
