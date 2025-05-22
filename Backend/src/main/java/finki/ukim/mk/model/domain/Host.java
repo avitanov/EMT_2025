@@ -22,9 +22,9 @@ public class Host {
 
     @ManyToMany
     @JoinTable(
-            name="hosts_guests",
-            joinColumns = @JoinColumn(name="host_id"),
-            inverseJoinColumns = @JoinColumn(name="guest_id")
+            name="guest_host_list",
+            joinColumns = @JoinColumn(name = "host_list_id"),
+            inverseJoinColumns = @JoinColumn(name = "guest_list_id")
     )
     private List<Guest> guestList;
 

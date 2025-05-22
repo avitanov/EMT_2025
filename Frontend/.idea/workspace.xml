@@ -1,92 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="9276f5e2-5277-4c4f-b96c-23adbdbaacd5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/.gitattributes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/EmtLabsApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/EmtLabsApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/config/CustomUsernamePasswordAuthenticationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/config/CustomUsernamePasswordAuthenticationProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/config/DataInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/config/OpenApiConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/AccommodationDetailsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/AccommodationDetailsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/AccommodationPerCategoryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/AccommodationPerCategoryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/CreateAccommodationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/CreateAccommodationDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/CreateCountryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/CreateCountryDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/CreateGuestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/CreateGuestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/CreateHostDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/CreateHostDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/CreateUserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/CreateUserDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/DisplayAccommodationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/DisplayAccommodationDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/DisplayCountryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/DisplayCountryDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/DisplayGuestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/DisplayGuestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/DisplayHostDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/DisplayHostDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/DisplayUserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/DisplayUserDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/LoginResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/LoginResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/dto/LoginUserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/dto/LoginUserDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/events/HostCreatedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/events/HostCreatedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/jobs/ScheduledTasks.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/jobs/ScheduledTasks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/listeners/HostEventListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/listeners/HostEventListeners.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/Accommodation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Accommodation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/Country.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Country.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/Guest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Guest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/Host.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Host.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/views/AccommodationsPerHostView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/views/AccommodationsPerHostView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/domain/views/HostsPerCountryView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/views/HostsPerCountryView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/enumerations/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/enumerations/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/enumerations/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/enumerations/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/InvalidArgumentsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/InvalidArgumentsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/InvalidUserCredentialsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/InvalidUserCredentialsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/InvalidUsernameOrPasswordException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/InvalidUsernameOrPasswordException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/PasswordsDoNotMatchException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/PasswordsDoNotMatchException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/UserNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/UserNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/exceptions/UsernameAlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/exceptions/UsernameAlreadyExistsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/model/projections/HostProjection.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/projections/HostProjection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/AccommodationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/AccommodationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/AccommodationsPerHostViewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/AccommodationsPerHostViewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/CountryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/CountryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/GuestRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/GuestRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/HostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/HostRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/HostsPerCountryViewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/HostsPerCountryViewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/security/JwtConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/security/JwtConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/security/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/security/JwtFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/security/JwtHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/security/JwtHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/security/JwtSecurityWebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/security/JwtSecurityWebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/AccommodationApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/AccommodationApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/GuestApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/GuestApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/HostApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/HostApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/UserApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/UserApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/impl/AccommodationApplicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/impl/AccommodationApplicationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/impl/GuestApplicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/impl/GuestApplicationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/impl/HostApplicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/impl/HostApplicationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/application/impl/UserApplicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/application/impl/UserApplicationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/AccommodationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/AccommodationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/CountryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/CountryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/GuestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/GuestService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/HostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/HostService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/impl/AccommodationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/impl/AccommodationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/impl/CountryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/impl/CountryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/impl/GuestServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/impl/GuestServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/impl/HostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/impl/HostServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/service/domain/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/service/domain/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/web/AccommodationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/web/AccommodationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/web/CountryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/web/CountryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/web/GuestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/web/GuestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/web/HostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/web/HostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/finki/ukim/mk/web/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/web/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/resources/application-dev.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/resources/application-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/resources/application-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/finki/ukim/mk/EmtLabsApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/test/java/finki/ukim/mk/EmtLabsApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../views.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/views.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Host.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Host.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/axios/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/axios/axios.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/contexts/authContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/contexts/authContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/hooks/useAuth.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/hooks/useAuth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,10 +27,16 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2xQ7CGNNoXZLnvoGjKMjdHv2vIN" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -110,10 +47,24 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/atana/IdeaProjects/EMT_LABS/Frontend",
+    "last_opened_file_path": "C:/Users/atana/IdeaProjects/EMT_LABS/Frontend/labarotory_project/src/ui/components/accommodations",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\atana\IdeaProjects\EMT_LABS\Frontend\labarotory_project\src\ui\components\accommodations" />
+      <recent name="C:\Users\atana\IdeaProjects\EMT_LABS\Frontend\labarotory_project\src\ui\components\countries" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\atana\IdeaProjects\EMT_LABS\Frontend\labarotory_project\src\ui\components\hosts\HostsGrid" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -123,6 +74,7 @@
       <option name="presentableId" value="Default" />
       <updated>1747858313930</updated>
       <workItem from="1747858314924" duration="131000" />
+      <workItem from="1747859694728" duration="12058000" />
     </task>
     <servers />
   </component>

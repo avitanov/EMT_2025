@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import AccommodationPage from  "./ui/pages/AccommodationPage/AccommodationPage.jsx";
+import HostsPage from "./ui/pages/HostsPage/HostsPage.jsx";
+import CountriesPage from "./ui/pages/CountriesPage/CountriesPage.jsx";
+import {BrowserRouter, Routes, Route} from "react-router";
+import Layout from "./ui/components/layout/Layout/Layout.jsx";
+import HomePage from "./ui/pages/HomePage.jsx";
+import Register from "./ui/components/auth/Register.jsx";
+import Login from "./ui/components/auth/Login.jsx"
+import ProtectedRoute from "./ui/components/routing/ProtectedRoute/ProtectedRoute.jsx";
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App = () => {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/register" element={<Register/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/" element={<Layout/>}>
+                    <Route index element={<HomePage/>}/>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="accommodations" element={<AccommodationPage/>}/>
+                        <Route path="hosts" element={<HostsPage/>}/>
+                        <Route path="countries" element={<CountriesPage/>}/>
+                    </Route>
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
+};
 
 export default App
