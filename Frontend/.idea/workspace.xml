@@ -6,18 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="9276f5e2-5277-4c4f-b96c-23adbdbaacd5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Host.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/src/main/java/finki/ukim/mk/model/domain/Host.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/axios/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/axios/axios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/contexts/authContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/contexts/authContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/hooks/useAuth.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/hooks/useAuth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labarotory_project/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/hooks/useAccommodations.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/hooks/useAccommodations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/repository/accommodationsRepository.js" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/repository/accommodationsRepository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/ui/components/accommodations/AccommodationCard/AccommodationCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/ui/components/accommodations/AccommodationCard/AccommodationCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/ui/components/accommodations/AccommodationsGrid/AccommodationsGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/ui/components/accommodations/AccommodationsGrid/AccommodationsGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labarotory_project/src/ui/pages/AccommodationPage/AccommodationPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/labarotory_project/src/ui/pages/AccommodationPage/AccommodationPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +41,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/atana/IdeaProjects/EMT_LABS/Frontend/labarotory_project/src/ui/components/accommodations",
+    "last_opened_file_path": "C:/Users/atana/IdeaProjects/EMT_LABS/Backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,7 +68,8 @@
       <option name="presentableId" value="Default" />
       <updated>1747858313930</updated>
       <workItem from="1747858314924" duration="131000" />
-      <workItem from="1747859694728" duration="12058000" />
+      <workItem from="1747859694728" duration="12531000" />
+      <workItem from="1747909850684" duration="2266000" />
     </task>
     <servers />
   </component>

@@ -55,13 +55,23 @@ const useAccommodations = ()=>{
             .catch((error) => console.log(error));
     }, [fetchAccommodations]);
 
+    const onRent = useCallback((id)=>{
+        accommodationsRepository.rent(id)
+            .then(()=>{
+                console.log(`Successfully rented the accommodation with ID ${id}`)
+                fetchAccommodations();
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+    },[fetchAccommodations])
 
 
     useEffect(() => {
         fetchAccommodations()
     }, [fetchAccommodations]);
 
-    return {...state, onAdd: onAdd, onEdit: onEdit, onDelete: onDelete};
+    return {...state, onAdd: onAdd, onEdit: onEdit, onDelete: onDelete, onRent:onRent};
 }
 
 export default useAccommodations;

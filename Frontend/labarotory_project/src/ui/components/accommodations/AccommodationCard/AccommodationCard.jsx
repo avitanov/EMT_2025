@@ -9,14 +9,19 @@ import EditAccommodationDialog from "../EditAccommodationDialog/EditAccommodatio
 import DeleteAccommodationDialog from "../DeleteAccommodationDialog/DeleteAccommodationDialog.jsx";
 import {useNavigate} from "react-router";
 
-const AccommodationCard = ({accommodation, onEdit, onDelete}) => {
+const AccommodationCard = ({accommodation, onEdit, onDelete, onRent}) => {
     const navigate = useNavigate();
     const [editAccommodationDialogOpen, setEditAccommodationDialogOpen] = useState(false);
     const [deleteAccommodationDialogOpen, setDeleteAccommodationDialogOpen] = useState(false);
+    const handleSubmit = () => {
+        onRent(accommodation.id);
+
+    };
+
 
     return (
         <>
-            <Card sx={{boxShadow: 3, borderRadius: 2, p: 1}}>
+            <Card sx={{boxShadow: 3, borderRadius: 2, p: 1}} style={{width:290,}}>
                 <CardContent>
                     <Typography variant="h5">{accommodation.name} </Typography>
                     <Typography variant="h5">Number of Rooms: {accommodation.numRooms} </Typography>
@@ -39,14 +44,14 @@ const AccommodationCard = ({accommodation, onEdit, onDelete}) => {
 
                 </CardContent>
                 <CardActions sx={{justifyContent: "space-between"}}>
-                    {/*<Button*/}
-                    {/*    size="small"*/}
-                    {/*    color="info"*/}
-                    {/*    startIcon={<InfoIcon/>}*/}
-                    {/*    onClick={() => navigate(`/hosts/${host.id}`)}*/}
-                    {/*>*/}
-                    {/*    Info*/}
-                    {/*</Button>*/}
+                    <Button
+                        size="small"
+                        color="success"
+                        startIcon={<InfoIcon/>}
+                        onClick={handleSubmit}
+                    >
+                        Rent
+                    </Button>
                     <Box>
                         <Button
                             size="small"

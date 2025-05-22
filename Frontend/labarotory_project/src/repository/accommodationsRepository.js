@@ -16,6 +16,9 @@ const accommodationsRepository = {
     },
     delete: async (id)=>{
         return await axiosInstance.delete(`/accommodations/delete/${id}`)
+    },
+    rent: async(id)=>{
+        return await axiosInstance.post(`/accommodations/rent/${id}`)
     }
 }
 

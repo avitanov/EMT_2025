@@ -5,9 +5,16 @@ import AccommodationsGrid from "../../components/accommodations/AccommodationsGr
 import AddAccommodationDialog from "../../components/accommodations/AddAccommodationDialog/AddAccommodationDialog.jsx";
 import useAccommodations from "../../../hooks/useAccommodations.js";
 const AccommodationPage = () => {
-    const {accommodations, loading, onAdd, onEdit, onDelete} = useAccommodations();
+    const {accommodations, loading, onAdd, onEdit, onDelete,onRent} = useAccommodations();
     const [addAccommodationDialogOpen, setAddAccommodationDialogOpen] = useState(false);
+    const [filteredAccommodations,setFilteredAccommodations]=useState([]);
+    const filterReserved= ()=>{
+        setFilteredAccommodations(accommodations.filter((accommodation)=>accommodation.isReserved==true));
 
+    }
+    const clearFilter= ()=>{
+        setFilteredAccommodations([]);
+    }
     return (
         <>
             <Box className="products-box">
@@ -18,12 +25,21 @@ const AccommodationPage = () => {
                 )}
                 {!loading &&
                     <>
-                        <Box sx={{display: "flex", justifyContent: "flex-end", mb: 2}}>
+                        <Box sx={{display: "flex", justifyContent: "space-between", mb: 2}}>
+                            <Button variant="contained" color="primary" onClick={filteredAccommodations.length === 0 ? filterReserved : clearFilter}>
+                                {filteredAccommodations.length === 0 ? "Show Reserved" : "Show All"}
+                            </Button>
                             <Button variant="contained" color="primary" onClick={() => setAddAccommodationDialogOpen(true)}>
                                 Add Accommodation
                             </Button>
+
                         </Box>
-                        <AccommodationsGrid accommodations={accommodations} onEdit={onEdit} onDelete={onDelete}/>
+                        {filteredAccommodations.length==0 &&
+                            <AccommodationsGrid accommodations={accommodations} onRent={onRent} onEdit={onEdit} onDelete={onDelete}/>
+                        }
+                        {filteredAccommodations.length>0 &&
+                            <AccommodationsGrid accommodations={filteredAccommodations} onRent={onRent} onEdit={onEdit} onDelete={onDelete}/>
+                        }
                     </>}
             </Box>
             <AddAccommodationDialog
