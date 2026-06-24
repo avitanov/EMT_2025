@@ -1,68 +1,31 @@
 import React from 'react';
-import {Box, CircularProgress,Typography,Stack,Button} from "@mui/material";
+import {Box, CircularProgress, Typography} from "@mui/material";
 import ProductsGrid from "../../components/products/ProductsGrid/ProductsGrid.jsx";
 import useProducts from "../../../hooks/useProducts.js";
 import "./ProductsPage.css";
-import { useParams,useNavigate} from "react-router";
+import {useParams} from "react-router";
 
 const ProductsPage = () => {
     const {category} = useParams();
     const {products, loading} = useProducts(category);
-    const navigate=useNavigate();
 
     if(!category){
         return (
-            <Box
-                sx={{
-                    minHeight: '80vh',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'black',
-                    p: 2,
-                }}
-            >
-                <Box
-                    sx={{
-                        textAlign: 'center',
-                        backdropFilter: 'blur(8px)',
-                        backgroundColor: 'rgba(255,255,255,0.12)',
-                        borderRadius: 2,
-                        p: 4,
-                        maxWidth: 480,
-                        width: '100%',
-                        animation: 'fadeIn 0.8s ease-out',
-                    }}
-                >
-                    <Typography variant="h3" component="h1" gutterBottom>
-                        Добредојде!
+            <Box className="products-landing">
+                <Box className="products-landing-panel">
+                    <Typography variant="overline" className="products-landing-eyebrow">
+                        E-SHOP
                     </Typography>
-                    <Typography variant="subtitle1" gutterBottom>
-                        Избери категорија за да ги разгледаш нашите производи.
+                    <Typography variant="h2" component="h1" className="products-landing-title">
+                        Прегледај техника без непотребен хаос.
                     </Typography>
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={2}
-                        justifyContent="center"
-                        sx={{ mt: 3 }}
-                    >
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => navigate('/products/frizideri')}
-                            sx={{ backgroundColor: '#ffcc00', color: '#000' }}
-                        >
-                            Фрижидери
-                        </Button>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => navigate('/products/inverteri')}
-                            sx={{ backgroundColor: '#00ccff', color: '#000' }}
-                        >
-                            Инвертери
-                        </Button>
-                    </Stack>
+                    <Typography variant="body1" className="products-landing-description">
+                        На едно место ги разгледуваш фрижидерите и инвертерите од повеќе продавници,
+                        со детали и споредба што се чита лесно.
+                    </Typography>
+                    <Typography variant="body2" className="products-landing-hint">
+                        Избери категорија од горното мени за да продолжиш.
+                    </Typography>
                 </Box>
             </Box>
         );
