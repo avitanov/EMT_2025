@@ -5,9 +5,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import "./Header.css";
 
 const pages = [
-    {"path": "/products", "name": "home"},
-    {"path": "/products/frizideri", "name": "frizideri"},
-    {"path": "/products/inverteri", "name": "inverteri"},
+    {"path": "/products", "name": "Дома"},
+    {"path": "/products/frizideri", "name": "Фрижидери"},
+    {"path": "/products/inverteri", "name": "Инвертери"},
 ];
 
 const Header = () => {
