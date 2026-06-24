@@ -1,0 +1,161 @@
+name: backend-ci
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "docker-compose.yml"
+      - ".github/workflows/backend-ci.yml"
+  push:
+    paths:
+      - "backend/**"
+      - "docker-compose.yml"
+      - ".github/workflows/backend-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'eu-central-1' }}
+  AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
+  ECR_BACKEND_REPOSITORY: ${{ vars.ECR_BACKEND_REPOSITORY || 'emt-backend' }}
+  BACKEND_CONTAINER_PORT: ${{ vars.SERVER_PORT || '9091' }}
+  GITOPS_REPOSITORY: ${{ vars.GITOPS_REPOSITORY || '' }}
+  GITOPS_BRANCH: ${{ vars.GITOPS_BRANCH || 'main' }}
+  GITOPS_BACKEND_VALUES_FILE: ${{ vars.GITOPS_BACKEND_VALUES_FILE || '' }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  test-backend:
+    name: test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run backend tests
+        run: |
+          chmod +x backend/mvnw
+          ./backend/mvnw -f backend/pom.xml --batch-mode test
+
+  build-backend-image:
+    name: build-backend-image
+    runs-on: ubuntu-latest
+    needs: test-backend
+    outputs:
+      image_repository: ${{ steps.image.outputs.image_repository }}
+      image_tag: ${{ steps.image.outputs.image_tag }}
+      image_ref: ${{ steps.image.outputs.image_ref }}
+    env:
+      SHOULD_PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate publishing configuration
+        if: env.SHOULD_PUBLISH == 'true'
+        run: |
+          test -n "${AWS_ROLE_TO_ASSUME}" || { echo "Missing repository variable AWS_ROLE_TO_ASSUME"; exit 1; }
+          test -n "${AWS_REGION}" || { echo "Missing repository variable AWS_REGION"; exit 1; }
+          test -n "${ECR_BACKEND_REPOSITORY}" || { echo "Missing repository variable ECR_BACKEND_REPOSITORY"; exit 1; }
+
+      - name: Configure AWS credentials
+        if: env.SHOULD_PUBLISH == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        if: env.SHOULD_PUBLISH == 'true'
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Prepare image reference
+        id: image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          if [ "${SHOULD_PUBLISH}" = "true" ]; then
+            echo "image_repository=${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}" >> "$GITHUB_OUTPUT"
+            echo "image_ref=${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "image_repository=${ECR_BACKEND_REPOSITORY}" >> "$GITHUB_OUTPUT"
+            echo "image_ref=${ECR_BACKEND_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build backend Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: ${{ env.SHOULD_PUBLISH == 'true' }}
+          tags: ${{ steps.image.outputs.image_ref }}
+          build-args: |
+            SERVER_PORT=${{ env.BACKEND_CONTAINER_PORT }}
+          cache-from: type=gha,scope=backend-image
+          cache-to: type=gha,mode=max,scope=backend-image
+
+  update-gitops-backend-tag:
+    name: update-gitops-backend-tag
+    runs-on: ubuntu-latest
+    needs: build-backend-image
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      vars.GITOPS_REPOSITORY != '' &&
+      vars.GITOPS_BACKEND_VALUES_FILE != ''
+    steps:
+      - name: Validate GitOps configuration
+        env:
+          GITOPS_REPO_TOKEN: ${{ secrets.GITOPS_REPO_TOKEN }}
+        run: |
+          test -n "${GITOPS_REPO_TOKEN}" || { echo "Missing secret GITOPS_REPO_TOKEN"; exit 1; }
+
+      - name: Checkout GitOps repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GITOPS_REPOSITORY }}
+          ref: ${{ env.GITOPS_BRANCH }}
+          token: ${{ secrets.GITOPS_REPO_TOKEN }}
+          path: gitops
+
+      - name: Update backend image reference
+        uses: mikefarah/yq@v4.45.1
+        with:
+          cmd: >
+            yq -i '
+            .backend.image.repository = "${{ needs.build-backend-image.outputs.image_repository }}" |
+            .backend.image.tag = "${{ needs.build-backend-image.outputs.image_tag }}"
+            ' "gitops/${{ env.GITOPS_BACKEND_VALUES_FILE }}"
+
+      - name: Commit and push GitOps change
+        working-directory: gitops
+        env:
+          BACKEND_VALUES_FILE: ${{ env.GITOPS_BACKEND_VALUES_FILE }}
+          GITOPS_BRANCH: ${{ env.GITOPS_BRANCH }}
+          IMAGE_TAG: ${{ needs.build-backend-image.outputs.image_tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${BACKEND_VALUES_FILE}"
+          git diff --cached --quiet && exit 0
+          git commit -m "build: update backend image tag to ${IMAGE_TAG}"
+          git push origin "${GITOPS_BRANCH}"
