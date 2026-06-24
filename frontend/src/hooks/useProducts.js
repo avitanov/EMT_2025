@@ -5,6 +5,15 @@ const initialState = {
     "loading": true,
 };
 
+const asProductList = (data) => {
+    if (Array.isArray(data)) {
+        return data;
+    }
+
+    console.warn("Expected products response to be an array.", data);
+    return [];
+};
+
 const useProducts = (category) => {
     const [state, setState] = useState(initialState);
 
@@ -14,11 +23,17 @@ const useProducts = (category) => {
             .findAllFrizideri()
             .then((response) => {
                 setState({
-                    "products": response.data,
+                    "products": asProductList(response.data),
                     "loading": false,
                 });
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                console.log(error);
+                setState({
+                    "products": [],
+                    "loading": false,
+                });
+            });
     }, []);
     const fetchInverteri = useCallback(() => {
         setState(initialState);
@@ -26,11 +41,17 @@ const useProducts = (category) => {
             .findAllInverteri()
             .then((response) => {
                 setState({
-                    "products": response.data,
+                    "products": asProductList(response.data),
                     "loading": false,
                 });
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                console.log(error);
+                setState({
+                    "products": [],
+                    "loading": false,
+                });
+            });
     }, []);
 
 

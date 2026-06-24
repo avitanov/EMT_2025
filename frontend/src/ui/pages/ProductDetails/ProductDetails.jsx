@@ -6,7 +6,6 @@ import {
     Box,
     Button,
     CircularProgress,
-    Grid,
     Typography,
     Card,
     CardContent,
@@ -20,6 +19,8 @@ import {
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import ProductsGrid from "../../components/products/ProductsGrid/ProductsGrid.jsx";
+
+const fallbackImage = "/product-placeholder.svg";
 
 const ProductDetails = () => {
     const { category, id } = useParams();
@@ -35,7 +36,9 @@ const ProductDetails = () => {
         );
     }
 
-    const { website, productName, price, ImageUrl, specificationList = [] } = product;
+    const { website, productName, specifications = [] } = product;
+    const imageSrc = product.imageUrl ?? product.ImageUrl ?? fallbackImage;
+    const priceValue = product.priceMkd ?? product.price;
 
     return (
         <Box>
@@ -49,53 +52,111 @@ const ProductDetails = () => {
             </Button>
 
             <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-                <Grid container>
-                    {/* Image */}
-                    <Grid item xs={12} md={4}>
-                        <CardMedia
-                            component="img"
-                            image={ImageUrl}
-                            alt={productName}
-                            sx={{ height: '100%', objectFit: 'contain', p: 2 }}
-                        />
-                    </Grid>
+                <CardContent
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 3,
+                        p: { xs: 2, md: 4 }
+                    }}
+                >
+                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <Box
+                            sx={{
+                                width: { xs: 240, sm: 300, md: 360 },
+                                height: { xs: 240, sm: 300, md: 360 },
+                                maxWidth: '100%',
+                                borderRadius: 2,
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                backgroundColor: 'background.paper',
+                                overflow: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                p: 2
+                            }}
+                        >
+                            <CardMedia
+                                component="img"
+                                src={imageSrc}
+                                alt={productName}
+                                onError={(event) => {
+                                    event.currentTarget.src = fallbackImage;
+                                }}
+                                sx={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            />
+                        </Box>
+                    </Box>
 
-                    {/* Details & Specs */}
-                    <Grid item xs={12} md={8}>
-                        <CardContent>
-                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
-                                {productName}
-                            </Typography>
-                            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                {website}
-                            </Typography>
-                            <Typography variant="h5" color="primary.main" gutterBottom>
-                                {Number(price).toLocaleString('en-US')} ден
-                            </Typography>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxWidth: 720,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                            gap: 1
+                        }}
+                    >
+                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, mb: 0 }}>
+                            {productName}
+                        </Typography>
+                        <Typography variant="subtitle2" color="text.secondary">
+                            {website}
+                        </Typography>
+                        <Typography variant="h5" color="primary.main" sx={{ fontWeight: 700 }}>
+                            {typeof priceValue === 'number' ? priceValue.toLocaleString('en-US') : 'N/A'} ден
+                        </Typography>
+                    </Box>
 
-                            <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ width: '100%', maxWidth: 720 }} />
 
-                            <Typography variant="h6" gutterBottom>
-                                Спецификации
-                            </Typography>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxWidth: 720,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 2
+                        }}
+                    >
+                        <Typography variant="h6" sx={{ textAlign: 'center' }}>
+                            Спецификации
+                        </Typography>
 
-                            <TableContainer>
-                                <Table size="small" aria-label="specifications">
-                                    <TableBody>
-                                        {specificationList.map((spec) => (
+                        <TableContainer
+                            sx={{
+                                width: '100%',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                borderRadius: 2
+                            }}
+                        >
+                            <Table size="small" aria-label="specifications">
+                                <TableBody>
+                                    {specifications.length > 0 ? (
+                                        specifications.map((spec) => (
                                             <TableRow
                                                 key={spec.id}
                                                 sx={{ '&:nth-of-type(odd)': { backgroundColor: 'action.hover' } }}
                                             >
                                                 <TableCell>{spec.specificationText}</TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </CardContent>
-                    </Grid>
-                </Grid>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell align="center">Нема спецификации.</TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                </CardContent>
             </Card>
 
             {/* Similar Products Button and Feedback */}

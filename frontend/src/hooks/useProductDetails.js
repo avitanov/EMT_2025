@@ -2,6 +2,32 @@
 import {useCallback, useEffect, useState} from "react";
 import productRepository from "../repository/productRepository.js";
 
+const asProductList = (data) => {
+    if (Array.isArray(data)) {
+        return data;
+    }
+
+    console.warn("Expected similar products response to be an array.", data);
+    return [];
+};
+
+const normalizeProductDetails = (data) => {
+    if (!data || typeof data !== "object") {
+        return null;
+    }
+
+    return {
+        ...data,
+        priceMkd: data.priceMkd ?? data.price,
+        imageUrl: data.imageUrl ?? data.ImageUrl,
+        specifications: Array.isArray(data.specifications)
+            ? data.specifications
+            : Array.isArray(data.specificationList)
+                ? data.specificationList
+                : [],
+    };
+};
+
 const useProductDetails = (id, category) => {
     const [state, setState] = useState({
         "product": null,
@@ -19,7 +45,7 @@ const useProductDetails = (id, category) => {
                     // Reset similarProducts and related states when main product changes
                     setState(prevState => ({
                         ...prevState,
-                        "product": response.data,
+                        "product": normalizeProductDetails(response.data),
                         "similarProducts": [],
                         "isLoadingSimilar": false,
                         "hasFetchedSimilar": false
@@ -33,7 +59,7 @@ const useProductDetails = (id, category) => {
                     // Reset similarProducts and related states when main product changes
                     setState(prevState => ({
                         ...prevState,
-                        "product": response.data,
+                        "product": normalizeProductDetails(response.data),
                         "similarProducts": [],
                         "isLoadingSimilar": false,
                         "hasFetchedSimilar": false
@@ -52,7 +78,7 @@ const useProductDetails = (id, category) => {
                 .then((response) => {
                     setState(prevState => ({
                         ...prevState,
-                        "similarProducts": response.data,
+                        "similarProducts": asProductList(response.data),
                         "isLoadingSimilar": false, // Set loading to false
                         "hasFetchedSimilar": true // Mark as fetched
                     }));
@@ -72,7 +98,7 @@ const useProductDetails = (id, category) => {
                 .then((response) => {
                     setState(prevState => ({
                         ...prevState,
-                        "similarProducts": response.data,
+                        "similarProducts": asProductList(response.data),
                         "isLoadingSimilar": false, // Set loading to false
                         "hasFetchedSimilar": true // Mark as fetched
                     }));

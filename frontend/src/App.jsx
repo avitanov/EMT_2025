@@ -2,13 +2,14 @@
 import './App.css'
 import Layout from "./ui/components/layout/Layout/Layout.jsx";
 import ProductsPage from "./ui/pages/ProductsPage/ProductsPage.jsx";
-import {BrowserRouter, Routes, Route} from "react-router";
+import {BrowserRouter, Navigate, Routes, Route} from "react-router";
 import ProductDetails from "./ui/pages/ProductDetails/ProductDetails.jsx";
 function App() {
 
   return (
       <BrowserRouter>
           <Routes>
+          <Route path="/" element={<Navigate to="/products" replace />} />
           {/* /products/* all under your Layout */}
           <Route path="products" element={<Layout />}>
 

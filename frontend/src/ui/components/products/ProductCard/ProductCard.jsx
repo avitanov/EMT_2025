@@ -12,6 +12,8 @@ import {
     Typography
 } from "@mui/material";
 
+const fallbackImage = "/product-placeholder.svg";
+
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
     const { category } = useParams(); // category is needed for the navigate path
@@ -20,10 +22,11 @@ const ProductCard = ({ product }) => {
     // Use default values or fallback to prevent errors if properties are missing.
     // Assuming 'price' might be the actual property name if 'priceMkd' is missing for similar products.
     // If 'priceMkd' is always the correct name, then the issue is truly undefined data.
-    const { id, website, productName, imageUrl } = product;
+    const { id, website, productName } = product;
+    const imageSrc = product.imageUrl ?? product.ImageUrl ?? fallbackImage;
     // Safely access priceMkd, assuming it might be 'price' for consistency
     // If 'priceMkd' is the actual field name, use `product.priceMkd` directly.
-    const priceValue = product.priceMkd || product.price; // Try priceMkd, then fallback to price
+    const priceValue = product.priceMkd ?? product.price; // Try priceMkd, then fallback to price
 
     return (
         <Card sx={{ boxShadow: 3, borderRadius: 2, p: 1, maxWidth: 345 }}>
@@ -31,8 +34,11 @@ const ProductCard = ({ product }) => {
             <CardMedia
                 component="img"
                 height="180"
-                image={imageUrl}
+                src={imageSrc}
                 alt={productName}
+                onError={(event) => {
+                    event.currentTarget.src = fallbackImage;
+                }}
                 sx={{ objectFit: 'contain' }}
             />
 
@@ -54,7 +60,7 @@ const ProductCard = ({ product }) => {
                     sx={{ textAlign: "right", fontSize: "1.25rem", mt: 1 }}
                 >
                     {/* Check if priceValue exists and is a number before calling toLocaleString */}
-                    {typeof priceValue === 'number' ? priceValue.toLocaleString('en-US') : 'N/A'} ден
+                    {typeof priceValue === 'number' ? priceValue.toLocaleString('en-US') : 'N/A'} ден
                 </Typography>
             </CardContent>
 
