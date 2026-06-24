@@ -13,10 +13,11 @@ import java.util.List;
 public interface InverterProductRepository extends JpaRepository<InverterProduct, Long> {
     @Query("""
         SELECT p
-          FROM InverterProduct p, InverterProduct c
-         WHERE c.id = :chosenId
-           AND p.priceMkd BETWEEN c.priceMkd - 3000 AND c.priceMkd + 3000
-           AND p.id <> :chosenId
-        """)
-    List<InverterProduct> findProductsWithin5000OfChosen(@Param("chosenId") Long chosenId);
+         FROM InverterProduct p, InverterProduct c
+        WHERE c.id = :chosenId
+          AND p.priceMkd BETWEEN c.priceMkd - :priceWindow AND c.priceMkd + :priceWindow
+          AND p.id <> :chosenId
+       """)
+    List<InverterProduct> findProductsWithinPriceWindowOfChosen(@Param("chosenId") Long chosenId,
+                                                                 @Param("priceWindow") Integer priceWindow);
 }

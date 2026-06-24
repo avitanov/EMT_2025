@@ -1,6 +1,6 @@
 import React from 'react';
 import {Box, Container} from "@mui/material";
-import Header from "../Header/Header.jsx";
+import Header from "../header/Header.jsx";
 import {Outlet} from "react-router";
 import "./Layout.css";
 

@@ -3,11 +3,11 @@ package com.example.emt_advanced.service.impl;
 import com.example.emt_advanced.model.InverterProduct;
 import com.example.emt_advanced.model.InverterProductSpecification;
 import com.example.emt_advanced.model.Product;
-import com.example.emt_advanced.model.Specification;
 import com.example.emt_advanced.model.dto.ProductDTO;
 import com.example.emt_advanced.repository.InverterProductRepository;
 import com.example.emt_advanced.repository.InverterSpecificationRepository;
 import com.example.emt_advanced.service.ProductService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +16,14 @@ import java.util.List;
 public class InverterProductServiceImpl implements ProductService {
     private final InverterProductRepository inverterProductRepository;
     private final InverterSpecificationRepository inverterSpecificationRepository;
+    private final Integer similarProductsPriceWindow;
 
-    public InverterProductServiceImpl(InverterProductRepository inverterProductRepository, InverterSpecificationRepository inverterSpecificationRepository) {
+    public InverterProductServiceImpl(InverterProductRepository inverterProductRepository,
+                                      InverterSpecificationRepository inverterSpecificationRepository,
+                                      @Value("${app.similarity.price-window}") Integer similarProductsPriceWindow) {
         this.inverterProductRepository = inverterProductRepository;
         this.inverterSpecificationRepository = inverterSpecificationRepository;
+        this.similarProductsPriceWindow = similarProductsPriceWindow;
     }
 
     @Override
@@ -42,6 +46,6 @@ public class InverterProductServiceImpl implements ProductService {
 
     @Override
     public List<? extends Product> findSimilar(Long id) {
-        return inverterProductRepository.findProductsWithin5000OfChosen(id);
+        return inverterProductRepository.findProductsWithinPriceWindowOfChosen(id, similarProductsPriceWindow);
     }
 }

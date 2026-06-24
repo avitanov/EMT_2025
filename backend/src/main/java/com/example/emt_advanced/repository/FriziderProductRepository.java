@@ -12,11 +12,11 @@ import java.util.List;
 public interface FriziderProductRepository extends JpaRepository<FriziderProduct, Long> {
     @Query("""
         SELECT p
-          FROM FriziderProduct p, FriziderProduct c
-         WHERE c.id = :chosenId
-           AND p.priceMkd BETWEEN c.priceMkd - 3000 AND c.priceMkd + 3000
-           AND p.id <> :chosenId
-        """)
-    List<FriziderProduct> findProductsWithin5000OfChosen(@Param("chosenId") Long chosenId);
+         FROM FriziderProduct p, FriziderProduct c
+        WHERE c.id = :chosenId
+          AND p.priceMkd BETWEEN c.priceMkd - :priceWindow AND c.priceMkd + :priceWindow
+          AND p.id <> :chosenId
+       """)
+    List<FriziderProduct> findProductsWithinPriceWindowOfChosen(@Param("chosenId") Long chosenId,
+                                                                 @Param("priceWindow") Integer priceWindow);
 }
-

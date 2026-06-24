@@ -2,35 +2,44 @@ package com.example.emt_advanced.service.impl;
 import com.example.emt_advanced.model.Product;
 import com.example.emt_advanced.model.dto.ProductDTO;
 import com.example.emt_advanced.service.GeminiService;
-import com.example.emt_advanced.service.impl.FriziderProductServiceImpl;
-import com.example.emt_advanced.service.impl.InverterProductServiceImpl;
-import io.github.cdimascio.dotenv.Dotenv;
 import com.google.genai.Client;
 import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import com.google.genai.types.Part;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
 @Service
 public class GeminiServiceImpl implements GeminiService {
     private final Client geminiClient;
     private final FriziderProductServiceImpl friziderProductService;
     private final InverterProductServiceImpl inverterProductService;
-    private static final String MODEL_NAME = "gemini-2.0-flash-001";
+    private final String modelName;
 
     public GeminiServiceImpl(InverterProductServiceImpl inverterProductService,
-                             FriziderProductServiceImpl friziderProductService) {
-        Dotenv dotenv = Dotenv.load();
-        String apiKey = dotenv.get("GEMINI_API_KEY");
+                             FriziderProductServiceImpl friziderProductService,
+                             @Value("${gemini.api.key}") String apiKey,
+                             @Value("${gemini.model}") String modelName) {
         this.friziderProductService = friziderProductService;
         this.inverterProductService = inverterProductService;
-        this.geminiClient = Client.builder().apiKey(apiKey).build();
+        this.modelName = modelName;
+        this.geminiClient = StringUtils.hasText(apiKey)
+                ? Client.builder().apiKey(apiKey.trim()).build()
+                : null;
     }
 
     @Override
     public List<Product> findSimilarProducts(Long chosenProductId, String category) {
+        if (geminiClient == null) {
+            System.err.println("GEMINI_API_KEY is not configured; returning no similar products.");
+            return Collections.emptyList();
+        }
+
         var service = "frizideri".equals(category)
                 ? friziderProductService
                 : inverterProductService;
@@ -58,7 +67,7 @@ public class GeminiServiceImpl implements GeminiService {
                     .responseMimeType("application/json")
                     .build();
             GenerateContentResponse resp = geminiClient.models.generateContent(
-                    MODEL_NAME, content, config
+                    modelName, content, config
             );
             String text = resp.text().trim();
             if (text.startsWith("\"") && text.endsWith("\"")) {
