@@ -35,6 +35,7 @@ jobs:
   test-backend:
     name: test-backend
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -55,12 +56,15 @@ jobs:
     name: build-backend-image
     runs-on: ubuntu-latest
     needs: test-backend
+
     outputs:
       image_repository: ${{ steps.image.outputs.image_repository }}
       image_tag: ${{ steps.image.outputs.image_tag }}
       image_ref: ${{ steps.image.outputs.image_ref }}
+
     env:
       SHOULD_PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -82,6 +86,21 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Check if backend image already exists in ECR
+        if: env.SHOULD_PUBLISH == 'true'
+        id: ecr-check
+        run: |
+          if aws ecr describe-images \
+            --repository-name "${ECR_BACKEND_REPOSITORY}" \
+            --image-ids imageTag="${IMAGE_TAG}" \
+            >/dev/null 2>&1; then
+            echo "image_exists=true" >> "$GITHUB_OUTPUT"
+            echo "Backend image already exists in ECR: ${ECR_BACKEND_REPOSITORY}:${IMAGE_TAG}"
+          else
+            echo "image_exists=false" >> "$GITHUB_OUTPUT"
+            echo "Backend image does not exist yet. It will be built and pushed."
+          fi
+
       - name: Login to Amazon ECR
         if: env.SHOULD_PUBLISH == 'true'
         id: login-ecr
@@ -99,9 +118,11 @@ jobs:
             echo "image_repository=${ECR_BACKEND_REPOSITORY}" >> "$GITHUB_OUTPUT"
             echo "image_ref=${ECR_BACKEND_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
           fi
+
           echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Build backend Docker image
+        if: env.SHOULD_PUBLISH != 'true' || steps.ecr-check.outputs.image_exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: ./backend
@@ -112,16 +133,26 @@ jobs:
             SERVER_PORT=${{ env.BACKEND_CONTAINER_PORT }}
           cache-from: type=gha,scope=backend-image
           cache-to: type=gha,mode=max,scope=backend-image
+          provenance: false
+          sbom: false
+
+      - name: Skip backend image push
+        if: env.SHOULD_PUBLISH == 'true' && steps.ecr-check.outputs.image_exists == 'true'
+        run: |
+          echo "Skipping Docker build and push because image already exists:"
+          echo "${{ steps.image.outputs.image_ref }}"
 
   update-gitops-backend-tag:
     name: update-gitops-backend-tag
     runs-on: ubuntu-latest
     needs: build-backend-image
+
     if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       vars.GITOPS_REPOSITORY != '' &&
       vars.GITOPS_BACKEND_VALUES_FILE != ''
+
     steps:
       - name: Validate GitOps configuration
         env:
@@ -155,7 +186,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add "${BACKEND_VALUES_FILE}"
-          git diff --cached --quiet && exit 0
+
+          if git diff --cached --quiet; then
+            echo "No GitOps changes to commit."
+            exit 0
+          fi
+
           git commit -m "build: update backend image tag to ${IMAGE_TAG}"
           git push origin "${GITOPS_BRANCH}"
+```
