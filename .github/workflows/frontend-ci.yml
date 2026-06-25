@@ -208,3 +208,4 @@ jobs:
 
           git commit -m "build: update frontend image tag to ${IMAGE_TAG}"
           git push origin "${GITOPS_BRANCH}"
+```

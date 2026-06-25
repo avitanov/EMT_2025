@@ -196,3 +196,4 @@ jobs:
 
           git commit -m "build: update backend image tag to ${IMAGE_TAG}"
           git push origin "${GITOPS_BRANCH}"
+```
