@@ -38,9 +38,11 @@ jobs:
   test-frontend:
     name: test-frontend
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: frontend
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -65,12 +67,15 @@ jobs:
     name: build-frontend-image
     runs-on: ubuntu-latest
     needs: test-frontend
+
     outputs:
       image_repository: ${{ steps.image.outputs.image_repository }}
       image_tag: ${{ steps.image.outputs.image_tag }}
       image_ref: ${{ steps.image.outputs.image_ref }}
+
     env:
       SHOULD_PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -92,6 +97,21 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Check if frontend image already exists in ECR
+        if: env.SHOULD_PUBLISH == 'true'
+        id: ecr-check
+        run: |
+          if aws ecr describe-images \
+            --repository-name "${ECR_FRONTEND_REPOSITORY}" \
+            --image-ids imageTag="${IMAGE_TAG}" \
+            >/dev/null 2>&1; then
+            echo "image_exists=true" >> "$GITHUB_OUTPUT"
+            echo "Frontend image already exists in ECR: ${ECR_FRONTEND_REPOSITORY}:${IMAGE_TAG}"
+          else
+            echo "image_exists=false" >> "$GITHUB_OUTPUT"
+            echo "Frontend image does not exist yet. It will be built and pushed."
+          fi
+
       - name: Login to Amazon ECR
         if: env.SHOULD_PUBLISH == 'true'
         id: login-ecr
@@ -109,9 +129,11 @@ jobs:
             echo "image_repository=${ECR_FRONTEND_REPOSITORY}" >> "$GITHUB_OUTPUT"
             echo "image_ref=${ECR_FRONTEND_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
           fi
+
           echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Build frontend Docker image
+        if: env.SHOULD_PUBLISH != 'true' || steps.ecr-check.outputs.image_exists != 'true'
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
@@ -123,16 +145,26 @@ jobs:
             FRONTEND_CONTAINER_PORT=${{ env.FRONTEND_CONTAINER_PORT }}
           cache-from: type=gha,scope=frontend-image
           cache-to: type=gha,mode=max,scope=frontend-image
+          provenance: false
+          sbom: false
+
+      - name: Skip frontend image push
+        if: env.SHOULD_PUBLISH == 'true' && steps.ecr-check.outputs.image_exists == 'true'
+        run: |
+          echo "Skipping Docker build and push because image already exists:"
+          echo "${{ steps.image.outputs.image_ref }}"
 
   update-gitops-frontend-tag:
     name: update-gitops-frontend-tag
     runs-on: ubuntu-latest
     needs: build-frontend-image
+
     if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       vars.GITOPS_REPOSITORY != '' &&
       vars.GITOPS_FRONTEND_VALUES_FILE != ''
+
     steps:
       - name: Validate GitOps configuration
         env:
@@ -166,7 +198,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add "${FRONTEND_VALUES_FILE}"
-          git diff --cached --quiet && exit 0
+
+          if git diff --cached --quiet; then
+            echo "No GitOps changes to commit."
+            exit 0
+          fi
+
           git commit -m "build: update frontend image tag to ${IMAGE_TAG}"
           git push origin "${GITOPS_BRANCH}"
