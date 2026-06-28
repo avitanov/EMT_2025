@@ -89,15 +89,23 @@ jobs:
         if: env.SHOULD_PUBLISH == 'true'
         id: ecr-check
         run: |
-          if aws ecr describe-images \
+          set +e
+          output="$(aws ecr describe-images \
             --repository-name "${ECR_DB_SEEDER_REPOSITORY}" \
             --image-ids imageTag="${IMAGE_TAG}" \
-            >/dev/null 2>&1; then
+            2>&1)"
+          status=$?
+          set -e
+
+          if [ "${status}" -eq 0 ]; then
             echo "image_exists=true" >> "$GITHUB_OUTPUT"
             echo "Database seeder image already exists in ECR: ${ECR_DB_SEEDER_REPOSITORY}:${IMAGE_TAG}"
-          else
+          elif printf '%s' "${output}" | grep -q 'ImageNotFoundException'; then
             echo "image_exists=false" >> "$GITHUB_OUTPUT"
             echo "Database seeder image does not exist yet. It will be built and pushed."
+          else
+            echo "${output}"
+            exit "${status}"
           fi
 
       - name: Login to Amazon ECR
