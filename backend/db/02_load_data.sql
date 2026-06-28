@@ -36,9 +36,7 @@ CREATE UNLOGGED TABLE raw_inverteri_csv (
     spec_111 text, spec_112 text, spec_113 text, spec_114 text, spec_115 text
 );
 
-COPY raw_inverteri_csv
-    FROM '/import/inverteri.csv'
-    WITH (FORMAT csv, HEADER TRUE, QUOTE '"', ENCODING 'UTF8');
+\copy raw_inverteri_csv FROM '/import/inverteri.csv' WITH (FORMAT csv, HEADER TRUE, QUOTE '"', ENCODING 'UTF8')
 
 -------------------------------------------------------------------
 -- 2.  Mirror frizideri.csv 1‑to‑1 into a raw table
@@ -61,9 +59,7 @@ CREATE UNLOGGED TABLE raw_frizideri_csv (
     spec_46 text,  spec_47 text
 );
 
-COPY raw_frizideri_csv
-    FROM '/import/frizideri.csv'
-    WITH (FORMAT csv, HEADER TRUE, QUOTE '"', ENCODING 'UTF8');
+\copy raw_frizideri_csv FROM '/import/frizideri.csv' WITH (FORMAT csv, HEADER TRUE, QUOTE '"', ENCODING 'UTF8')
 
 -------------------------------------------------------------------
 -- 3.  Load “products” tables (one row per site+name)

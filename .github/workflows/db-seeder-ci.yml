@@ -1,0 +1,195 @@
+name: db-seeder-ci
+
+on:
+  pull_request:
+    paths:
+      - "backend/db/**"
+      - "backend/data/**"
+      - "db-seeder/**"
+      - ".github/workflows/db-seeder-ci.yml"
+  push:
+    paths:
+      - "backend/db/**"
+      - "backend/data/**"
+      - "db-seeder/**"
+      - ".github/workflows/db-seeder-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: db-seeder-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'eu-central-1' }}
+  AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
+  ECR_DB_SEEDER_REPOSITORY: ${{ vars.ECR_DB_SEEDER_REPOSITORY || 'emt-db-seeder' }}
+  GITOPS_REPOSITORY: ${{ vars.GITOPS_REPOSITORY || '' }}
+  GITOPS_BRANCH: ${{ vars.GITOPS_BRANCH || 'main' }}
+  GITOPS_DB_SEEDER_VALUES_FILE: ${{ vars.GITOPS_DB_SEEDER_VALUES_FILE || vars.GITOPS_BACKEND_VALUES_FILE || '' }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  validate-db-seeder:
+    name: validate-db-seeder
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate seeder script
+        run: sh -n db-seeder/seed.sh
+
+      - name: Validate seed assets exist
+        run: |
+          test -f backend/db/01_schema.sql
+          test -f backend/db/02_load_data.sql
+          test -f backend/data/inverteri.csv
+          test -f backend/data/frizideri.csv
+
+  build-db-seeder-image:
+    name: build-db-seeder-image
+    runs-on: ubuntu-latest
+    needs: validate-db-seeder
+
+    outputs:
+      image_repository: ${{ steps.image.outputs.image_repository }}
+      image_tag: ${{ steps.image.outputs.image_tag }}
+      image_ref: ${{ steps.image.outputs.image_ref }}
+
+    env:
+      SHOULD_PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate publishing configuration
+        if: env.SHOULD_PUBLISH == 'true'
+        run: |
+          test -n "${AWS_ROLE_TO_ASSUME}" || { echo "Missing repository variable AWS_ROLE_TO_ASSUME"; exit 1; }
+          test -n "${AWS_REGION}" || { echo "Missing repository variable AWS_REGION"; exit 1; }
+          test -n "${ECR_DB_SEEDER_REPOSITORY}" || { echo "Missing repository variable ECR_DB_SEEDER_REPOSITORY"; exit 1; }
+
+      - name: Configure AWS credentials
+        if: env.SHOULD_PUBLISH == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Check if db seeder image already exists in ECR
+        if: env.SHOULD_PUBLISH == 'true'
+        id: ecr-check
+        run: |
+          if aws ecr describe-images \
+            --repository-name "${ECR_DB_SEEDER_REPOSITORY}" \
+            --image-ids imageTag="${IMAGE_TAG}" \
+            >/dev/null 2>&1; then
+            echo "image_exists=true" >> "$GITHUB_OUTPUT"
+            echo "Database seeder image already exists in ECR: ${ECR_DB_SEEDER_REPOSITORY}:${IMAGE_TAG}"
+          else
+            echo "image_exists=false" >> "$GITHUB_OUTPUT"
+            echo "Database seeder image does not exist yet. It will be built and pushed."
+          fi
+
+      - name: Login to Amazon ECR
+        if: env.SHOULD_PUBLISH == 'true'
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Prepare image reference
+        id: image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          if [ "${SHOULD_PUBLISH}" = "true" ]; then
+            echo "image_repository=${ECR_REGISTRY}/${ECR_DB_SEEDER_REPOSITORY}" >> "$GITHUB_OUTPUT"
+            echo "image_ref=${ECR_REGISTRY}/${ECR_DB_SEEDER_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "image_repository=${ECR_DB_SEEDER_REPOSITORY}" >> "$GITHUB_OUTPUT"
+            echo "image_ref=${ECR_DB_SEEDER_REPOSITORY}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build database seeder Docker image
+        if: env.SHOULD_PUBLISH != 'true' || steps.ecr-check.outputs.image_exists != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./db-seeder/Dockerfile
+          push: ${{ env.SHOULD_PUBLISH == 'true' }}
+          tags: ${{ steps.image.outputs.image_ref }}
+          cache-from: type=gha,scope=db-seeder-image
+          cache-to: type=gha,mode=max,scope=db-seeder-image
+          provenance: false
+          sbom: false
+
+      - name: Skip db seeder image push
+        if: env.SHOULD_PUBLISH == 'true' && steps.ecr-check.outputs.image_exists == 'true'
+        run: |
+          echo "Skipping Docker build and push because image already exists:"
+          echo "${{ steps.image.outputs.image_ref }}"
+
+  update-gitops-db-seeder-tag:
+    name: update-gitops-db-seeder-tag
+    runs-on: ubuntu-latest
+    needs: build-db-seeder-image
+
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      vars.GITOPS_REPOSITORY != '' &&
+      (vars.GITOPS_DB_SEEDER_VALUES_FILE != '' || vars.GITOPS_BACKEND_VALUES_FILE != '')
+
+    steps:
+      - name: Validate GitOps configuration
+        env:
+          GITOPS_REPO_TOKEN: ${{ secrets.GITOPS_REPO_TOKEN }}
+        run: |
+          test -n "${GITOPS_REPO_TOKEN}" || { echo "Missing secret GITOPS_REPO_TOKEN"; exit 1; }
+
+      - name: Checkout GitOps repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GITOPS_REPOSITORY }}
+          ref: ${{ env.GITOPS_BRANCH }}
+          token: ${{ secrets.GITOPS_REPO_TOKEN }}
+          path: gitops
+
+      - name: Update database seeder image reference
+        uses: mikefarah/yq@v4.45.1
+        with:
+          cmd: >
+            yq -i '
+            .databaseSeeder.image.repository = "${{ needs.build-db-seeder-image.outputs.image_repository }}" |
+            .databaseSeeder.image.tag = "${{ needs.build-db-seeder-image.outputs.image_tag }}"
+            ' "gitops/${{ env.GITOPS_DB_SEEDER_VALUES_FILE }}"
+
+      - name: Commit and push GitOps change
+        working-directory: gitops
+        env:
+          DB_SEEDER_VALUES_FILE: ${{ env.GITOPS_DB_SEEDER_VALUES_FILE }}
+          GITOPS_BRANCH: ${{ env.GITOPS_BRANCH }}
+          IMAGE_TAG: ${{ needs.build-db-seeder-image.outputs.image_tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "${DB_SEEDER_VALUES_FILE}"
+
+          if git diff --cached --quiet; then
+            echo "No GitOps changes to commit."
+            exit 0
+          fi
+
+          git commit -m "build: update database seeder image tag to ${IMAGE_TAG}"
+          git push origin "${GITOPS_BRANCH}"
