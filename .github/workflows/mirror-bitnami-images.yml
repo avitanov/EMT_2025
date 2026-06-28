@@ -1,0 +1,131 @@
+name: mirror-bitnami-images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/mirror-bitnami-images.yml"
+
+concurrency:
+  group: mirror-bitnami-images-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'eu-central-1' }}
+  AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
+  ECR_POSTGRESQL_REPMGR_REPOSITORY: ${{ vars.ECR_POSTGRESQL_REPMGR_REPOSITORY || 'emt-postgresql-repmgr' }}
+  ECR_PGPOOL_REPOSITORY: ${{ vars.ECR_PGPOOL_REPOSITORY || 'emt-pgpool' }}
+  POSTGRESQL_REPMGR_IMAGE: bitnamilegacy/postgresql-repmgr:17.6.0-debian-12-r2
+  PGPOOL_IMAGE: bitnamilegacy/pgpool:4.6.3-debian-12-r0
+
+jobs:
+  mirror-images:
+    name: mirror-images
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - source_image: bitnamilegacy/postgresql-repmgr:17.6.0-debian-12-r2
+            target_repository: emt-postgresql-repmgr
+            repository_variable: ECR_POSTGRESQL_REPMGR_REPOSITORY
+          - source_image: bitnamilegacy/pgpool:4.6.3-debian-12-r0
+            target_repository: emt-pgpool
+            repository_variable: ECR_PGPOOL_REPOSITORY
+
+    steps:
+      - name: Validate publishing configuration
+        run: |
+          case "${{ matrix.repository_variable }}" in
+            ECR_POSTGRESQL_REPMGR_REPOSITORY) TARGET_REPOSITORY="${ECR_POSTGRESQL_REPMGR_REPOSITORY}" ;;
+            ECR_PGPOOL_REPOSITORY) TARGET_REPOSITORY="${ECR_PGPOOL_REPOSITORY}" ;;
+            *) echo "Unsupported repository variable"; exit 1 ;;
+          esac
+
+          test -n "${AWS_ROLE_TO_ASSUME}" || { echo "Missing repository variable AWS_ROLE_TO_ASSUME"; exit 1; }
+          test -n "${AWS_REGION}" || { echo "Missing repository variable AWS_REGION"; exit 1; }
+          test -n "${TARGET_REPOSITORY}" || { echo "Missing target ECR repository variable"; exit 1; }
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Prepare mirror parameters
+        id: mirror
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SOURCE_IMAGE: ${{ matrix.source_image }}
+        run: |
+          case "${{ matrix.repository_variable }}" in
+            ECR_POSTGRESQL_REPMGR_REPOSITORY) TARGET_REPOSITORY="${ECR_POSTGRESQL_REPMGR_REPOSITORY}" ;;
+            ECR_PGPOOL_REPOSITORY) TARGET_REPOSITORY="${ECR_PGPOOL_REPOSITORY}" ;;
+            *) echo "Unsupported repository variable"; exit 1 ;;
+          esac
+
+          IMAGE_TAG="${SOURCE_IMAGE##*:}"
+          IMAGE_REF="${ECR_REGISTRY}/${TARGET_REPOSITORY}:${IMAGE_TAG}"
+
+          echo "target_repository=${TARGET_REPOSITORY}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "image_ref=${IMAGE_REF}" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure target ECR repository exists
+        env:
+          TARGET_REPOSITORY: ${{ steps.mirror.outputs.target_repository }}
+        run: |
+          if aws ecr describe-repositories --repository-names "${TARGET_REPOSITORY}" >/dev/null 2>&1; then
+            echo "ECR repository already exists: ${TARGET_REPOSITORY}"
+          else
+            aws ecr create-repository \
+              --repository-name "${TARGET_REPOSITORY}" \
+              --image-tag-mutability IMMUTABLE \
+              --image-scanning-configuration scanOnPush=true
+          fi
+
+      - name: Check if mirrored image already exists in ECR
+        id: ecr-check
+        env:
+          TARGET_REPOSITORY: ${{ steps.mirror.outputs.target_repository }}
+          IMAGE_TAG: ${{ steps.mirror.outputs.image_tag }}
+        run: |
+          if aws ecr describe-images \
+            --repository-name "${TARGET_REPOSITORY}" \
+            --image-ids imageTag="${IMAGE_TAG}" \
+            >/dev/null 2>&1; then
+            echo "image_exists=true" >> "$GITHUB_OUTPUT"
+            echo "Mirrored image already exists in ECR: ${TARGET_REPOSITORY}:${IMAGE_TAG}"
+          else
+            echo "image_exists=false" >> "$GITHUB_OUTPUT"
+            echo "Mirrored image does not exist yet. It will be pulled and pushed."
+          fi
+
+      - name: Pull source image from Docker Hub
+        if: steps.ecr-check.outputs.image_exists != 'true'
+        run: docker pull "${{ matrix.source_image }}"
+
+      - name: Tag image for ECR
+        if: steps.ecr-check.outputs.image_exists != 'true'
+        run: docker tag "${{ matrix.source_image }}" "${{ steps.mirror.outputs.image_ref }}"
+
+      - name: Push mirrored image to ECR
+        if: steps.ecr-check.outputs.image_exists != 'true'
+        run: docker push "${{ steps.mirror.outputs.image_ref }}"
+
+      - name: Skip image push
+        if: steps.ecr-check.outputs.image_exists == 'true'
+        run: |
+          echo "Skipping mirror because image already exists:"
+          echo "${{ steps.mirror.outputs.image_ref }}"
